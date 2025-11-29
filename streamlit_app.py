@@ -1,3 +1,10 @@
+import pandas as pd
+
+df = pd.DataFrame({
+    "Symbol": ["GARAN.IS", "AKBNK.IS", "YKBNK.IS", "BIMAS.IS"],
+    "Sector": ["Bankacılık", "Bankacılık", "Bankacılık", "Perakende"]
+})
+
 import streamlit as st
 
 st.set_page_config(page_title="Finansal Benchmarking Paneli", layout="wide")
