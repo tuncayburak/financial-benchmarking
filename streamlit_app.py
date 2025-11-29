@@ -1,14 +1,40 @@
+import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+# Örnek veri çerçevesi (şimdilik demo için)
 df = pd.DataFrame({
     "Symbol": ["GARAN.IS", "AKBNK.IS", "YKBNK.IS", "BIMAS.IS"],
     "Sector": ["Bankacılık", "Bankacılık", "Bankacılık", "Perakende"]
 })
 
-import streamlit as st
+# Örnek fonksiyonlar (demo için basit versiyonlar)
+def compute_metric_trend(symbol, metric="ROE"):
+    # Demo amaçlı sahte veri üretelim
+    dates = pd.date_range("2022-01-01", periods=4, freq="Y")
+    values = [0.15, 0.20, 0.18, 0.17] if metric == "ROE" else [0.10, 0.12, 0.11, 0.09]
+    return pd.DataFrame({"Date": dates, metric: values})
 
+def plot_company_vs_sector_trend(symbol, sector, metric="ROE"):
+    comp_trend = compute_metric_trend(symbol, metric)
+    comp_trend["Type"] = symbol
+
+    sector_trend = compute_metric_trend(sector, metric)
+    sector_trend["Type"] = sector + " Ort."
+
+    plot_df = pd.concat([comp_trend, sector_trend])
+
+    plt.figure(figsize=(8,5))
+    sns.lineplot(data=plot_df, x="Date", y=metric, hue="Type", marker="o")
+    plt.title(f"{symbol} vs {sector} {metric} Trend")
+    st.pyplot(plt)
+
+def generate_comment(symbol):
+    return f"{symbol} için seçilen metrikte sektör ortalamasına göre karşılaştırma yapılmıştır."
+
+# Streamlit Arayüzü
 st.set_page_config(page_title="Finansal Benchmarking Paneli", layout="wide")
-
 st.title("📊 Finansal Benchmarking Paneli")
 
 # Şirket seçimi
