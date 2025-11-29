@@ -53,3 +53,30 @@ plot_company_vs_sector_trend(symbol, sector, metric)
 # Yorum
 st.subheader("💬 Otomatik Yorum")
 st.write(generate_comment(symbol))
+
+
+def compute_metric_trend(symbol, metric="ROE"):
+    dates = pd.date_range("2022-01-01", periods=5, freq="Y")
+    if symbol == "Bankacılık":
+        values = [0.10, 0.12, 0.11, 0.09, 0.095]
+    else:
+        values = [0.11, 0.13, 0.12, 0.10, 0.105]
+    return pd.DataFrame({"Date": dates, metric: values})
+
+def plot_company_vs_sector_trend(symbol, sector, metric="ROE"):
+    comp_trend = compute_metric_trend(symbol, metric)
+    comp_trend["Type"] = symbol
+
+    sector_trend = compute_metric_trend(sector, metric)
+    sector_trend["Type"] = sector + " Ort."
+
+    plot_df = pd.concat([comp_trend, sector_trend])
+
+    plt.clf()
+    plt.figure(figsize=(8,5))
+    sns.lineplot(data=plot_df, x="Date", y=metric, hue="Type", marker="o")
+    plt.title(f"{symbol} vs {sector} {metric} Trend")
+    st.pyplot(plt)
+
+if comp_trend[metric].dropna().empty:
+    st.warning(f"{symbol} için {metric} verisi bulunamadı.")
